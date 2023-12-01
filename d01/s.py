@@ -28,7 +28,7 @@ def read_lines():
 
 lines = list(read_lines())
 
-if not 1:
+if 1:
 	s = 0
 	for i in lines:
 		a = list(filter(lambda x: x in '0123456789', i))
@@ -37,13 +37,17 @@ if not 1:
 
 	print(s)
 
+W2I = {'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6,
+	   'seven': 7, 'eight': 8, 'nine': 9}
+EXP = 'one|two|three|four|five|six|seven|eight|nine|[0-9]'
+
 if not 2:
 	s = 0
 	def lookup(x):
-		return str({'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9}.get(x, x))
+		return str(W2I.get(x, x))
 	for i in lines:
 		import re
-		a = re.findall('one|two|three|four|five|six|seven|eight|nine|[0-9]', i)
+		a = re.findall(EXP, i)
 		s0 = int(lookup(a[0]) + lookup(a[-1]))
 		s += s0
 
@@ -52,14 +56,14 @@ if not 2:
 if 2:
 	s = 0
 	D = {}
-	for k, v in {'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9}.items():
+	for k, v in W2I.items():
 		D[k] = str(v)
 		D[str(v)] = str(v)
 	def lookup(x):
-		return str({'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9}.get(x, x))
+		return str(W2I.get(x, x))
 	def test(s):
 		import re
-		matched = re.match('one|two|three|four|five|six|seven|eight|nine|[0-9]', s)
+		matched = re.match(EXP, s)
 		if matched:
 			return lookup(matched.group())
 		else:
