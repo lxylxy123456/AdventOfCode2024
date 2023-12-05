@@ -121,7 +121,6 @@ def merge_segs(segs):
 		yield cur
 
 def part_2(lines):
-	#return part_2_bruteforce(lines)
 	s = 0
 	seeds, maps = read_input(iter(lines))
 	segs = []
