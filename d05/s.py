@@ -73,7 +73,7 @@ def part_2_bruteforce(lines):
 			for j in maps:
 				i = lookup_map(j, i)
 			locs.append(i)
-	print(locs)
+	#print(locs)
 	s = min(locs)
 	return s
 
@@ -129,9 +129,9 @@ def part_2(lines):
 		segs.append(range(i0, i0 + i1))
 	for j in maps:
 		segs = list(lookup_map_seg(j, segs))
-		print(segs)
+		#print(segs)
 		segs = list(merge_segs(segs))
-		print(segs)
+		#print(segs)
 	s = min(segs, key=lambda x: x.start).start
 	return s
 
