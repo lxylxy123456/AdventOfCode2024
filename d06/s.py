@@ -74,12 +74,36 @@ def solve2(t, d):
 			r1 = m
 	return r0 - l0
 
+def solve2O1(t, d):
+	# We want x s.t. x * (t - x) > d
+	# Let maxima solve (x * (t - x) - d = 0)
+	# (%i4) solve(x * (t - x) - d = 0, x);
+	# (%o4) [x = -(sqrt(t^2-4*d)-t)/2,x = (sqrt(t^2-4*d)+t)/2]
+	from math import sqrt
+	x0 = -(sqrt(t**2-4*d)-t)/2
+	x1 = (sqrt(t**2-4*d)+t)/2
+	l0 = int(x0)
+	l1 = l0 + 1
+	r0 = int(x1)
+	r1 = r0 + 1
+	# May not work well if x0 or x1 happens to be integer.
+	f = lambda x: (x * (t - x) - d)
+	assert f(l0) <= 0
+	assert f(l1) > 0
+	assert f(r0) > 0
+	assert f(r1) <= 0
+	return r0 - l0
+
 def part_2(lines):
 	s = 0
 	t = int(''.join(lines[0].split()[1:]))
 	d = int(''.join(lines[1].split()[1:]))
-	#s = solve1(t, d)
-	s = solve2(t, d)
+	# I submitted using solve1, didn't take too long to finish.
+	s = solve1(t, d)
+	# Then I wrote solve2 using bisection, thinking it is the optimal solution.
+	assert s == solve2(t, d)
+	# After posting the Youtube video, I realize there is an O(1) solution.
+	assert s == solve2O1(t, d)
 	return s
 
 if __name__ == '__main__':
