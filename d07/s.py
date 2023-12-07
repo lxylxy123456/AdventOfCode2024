@@ -83,7 +83,7 @@ def part_1(lines):
 	return s
 
 def part_2(lines):
-	raise NotImplementedError
+	return NotImplemented
 
 if __name__ == '__main__':
 	main()
