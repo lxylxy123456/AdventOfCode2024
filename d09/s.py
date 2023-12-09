@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/olfhjIVWoHE
+
 import argparse, math, sys, re, functools, operator, itertools
 from collections import defaultdict, Counter
 #sys.setrecursionlimit(100000000)
@@ -40,7 +42,7 @@ def part_1(lines):
 		s += solve1(list(map(int, i.split())))
 	return s
 
-def solve1(nums):
+def solve2(nums):
 	if not any(nums):
 		return 0
 	diffs = list(map(operator.sub, nums[1:], nums))
@@ -49,7 +51,7 @@ def solve1(nums):
 def part_2(lines):
 	s = 0
 	for i in lines:
-		s += solve1(list(map(int, i.split())))
+		s += solve2(list(map(int, i.split())))
 	return s
 
 if __name__ == '__main__':
