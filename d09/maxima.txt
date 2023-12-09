@@ -1,3 +1,4 @@
+$ # https://maths.cnam.fr/Membres/wilk/MathMax/help/Maxima/maxima_57.html
 $ maxima
 
 Maxima 5.46.0 https://maxima.sourceforge.io
