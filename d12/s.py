@@ -65,12 +65,45 @@ def part_1(lines):
 		s += solve_1(rec, cont)
 	return s
 
+# TODO: cache
+@functools.lru_cache(10485760)
+def solve_2_recu(rec, cont, nh, nq, nc):
+	if 1:
+		assert (nh, nq, nc) == (rec.count('#'), rec.count('?'), sum(cont))
+	# TODO: (nh, nq, nc)
+	if not rec:
+		if not cont:
+			return 1
+		else:
+			return 0
+	if rec[0] == '.':
+		return solve_2_recu(rec[1:], cont, nh, nq, nc)
+	elif rec[0] == '#':
+		if not cont:
+			return 0
+		n = cont[0]
+		if ((sum(map('?#'.__contains__, rec[:n])) == n) and
+			(len(rec) == n or rec[n] in '.?')):
+			# TODO
+			return solve_2_recu(rec[n+1:], cont[1:], rec[n+1:].count('#'), rec[n+1:].count('?'), nc - n)
+		else:
+			return 0
+	else:
+		s = 0
+		s += solve_2_recu('.' + rec[1:], cont, nh, nq - 1, nc)
+		s += solve_2_recu('#' + rec[1:], cont, nh + 1, nq - 1, nc)
+		return s
+
+def solve_2(rec, cont):
+	return solve_2_recu(rec, tuple(cont), rec.count('#'), rec.count('?'), sum(cont))
+
 def part_2(lines):
 	s = 0
-	for i in lines:
+	for index, i in enumerate(lines):
+		print(index)
 		rec, cont = i.split()
 		cont = list(map(int, cont.split(',')))
-		s += solve_1('?'.join([rec] * 5), cont * 5)
+		s += solve_2('?'.join([rec] * 5), cont * 5)
 	return s
 
 if __name__ == '__main__':
