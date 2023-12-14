@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/wND4vNoAlw4
+
 import argparse, math, sys, re, functools, operator, itertools
 from collections import defaultdict, Counter
 #sys.setrecursionlimit(100000000)
@@ -134,16 +136,16 @@ def part_2(lines):
 		rocks.append(list(i))
 	N = 1000000000
 
-	history = []
+	#history = []
 	hash_history = defaultdict(list)
 	for i in range(N):
-		history.append(rocks)
+		#history.append(rocks)
 		h = hash_rocks(rocks)
 		hash_history[h].append(i)
 		hh = hash_history[h]
-		print(hh)
+		#print(hh)
 		if len(hh) >= 2 and (N - hh[-1]) % (hh[-1] - hh[-2]) == 0:
-			print(N, hh[-1], hh[-2])
+			#print(N, hh[-1], hh[-2])
 			break
 		roll_nwse(rocks)
 
