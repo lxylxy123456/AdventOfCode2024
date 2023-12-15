@@ -13,7 +13,7 @@ for i in s*.py; do
 done
 
 while read EXPECTED; do
-	grep "$EXPECTED" "$TMPD/actual"
+	grep -w "$EXPECTED" "$TMPD/actual"
 done < "$TMPD/expected"
 
 rm -r "$TMPD"

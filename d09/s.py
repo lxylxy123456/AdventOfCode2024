@@ -46,7 +46,7 @@ def solve2(nums):
 	if not any(nums):
 		return 0
 	diffs = list(map(operator.sub, nums[1:], nums))
-	return nums[0] - solve1(diffs)
+	return nums[0] - solve2(diffs)
 
 def part_2(lines):
 	s = 0
