@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/_PFXQ3hmvrY
+
 import argparse, math, sys, re, functools, operator, itertools
 from collections import defaultdict, Counter
 #sys.setrecursionlimit(100000000)
@@ -73,7 +75,7 @@ def part_2(lines):
 	for index, box in enumerate(boxes):
 		for jndex, (l, f) in enumerate(box):
 			s += (1 + index) * (1 + jndex) * f
-			print((1 + index) * (1 + jndex) * f)
+			#print((1 + index) * (1 + jndex) * f)
 
 	return s
 
