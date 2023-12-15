@@ -1,0 +1,17 @@
+name: Compute all the answers
+
+on: ["push", "pull_request"]
+
+jobs:
+  compute:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: |
+        for i in d*; do
+          time ./compute.sh $i
+        done
+
