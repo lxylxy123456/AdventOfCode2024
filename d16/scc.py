@@ -6,6 +6,10 @@ Components (SCC) of the graph. If any vertex in the SCC is lit, all vertices
 are lit. Then topologically sort the SCCs, and traverse it to find the size of
 downstream SCCs. Finally, for each possible entrance, look up SCC size. Take
 the maximum.
+
+However, there is something wrong with this algorithm. Nevertheless, using SCC
+saves time during DFS and is faster than the original solution. On my computer
+it is 8.670s -> 1.772s (almost 5x speed up).
 """
 
 import argparse, math, sys, re, functools, operator, itertools
