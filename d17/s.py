@@ -39,7 +39,7 @@ vecs = [E, S, W, N]
 def vec_add(v1, v2):
 	return tuple(map(operator.add, v1, v2))
 
-def part_1(lines):
+def solve(lines, min_len, max_len):
 	s = 0
 	# dp[i][j][k] = arrive at lines[i][j] with straight line heading vecs[k]
 	dp = []
@@ -67,21 +67,22 @@ def part_1(lines):
 			dd = d
 			ii = i
 			jj = j
-			for _ in range(3):
+			for step in range(max_len):
 				ii, jj = vec_add((ii, jj), (di, dj))
 				if not in_map(ii, jj):
 					break
 				dd += int(lines[ii][jj])
-				if dd < dp[ii][jj][kk]:
-					heapq.heappush(frontier, (dd, ii, jj, kk))
+				if step >= min_len:
+					if dd < dp[ii][jj][kk]:
+						heapq.heappush(frontier, (dd, ii, jj, kk))
 	#for i in dp: print(i)
 	return min(dp[I - 1][J - 1])
 
+def part_1(lines):
+	return solve(lines, 0, 3)
+
 def part_2(lines):
-	s = 0
-	for i in lines:
-		i
-	return s
+	return solve(lines, 3, 10)
 
 if __name__ == '__main__':
 	main()
