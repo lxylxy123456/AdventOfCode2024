@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/W7b09tuBG-k
+
 import argparse, math, sys, re, functools, operator, itertools, heapq
 from collections import defaultdict, Counter
 #sys.setrecursionlimit(100000000)
@@ -67,7 +69,7 @@ def solve(lines, min_len, max_len):
 			dd = d
 			ii = i
 			jj = j
-			for step in range(max_len):
+			for step in range(1, max_len + 1):
 				ii, jj = vec_add((ii, jj), (di, dj))
 				if not in_map(ii, jj):
 					break
@@ -79,10 +81,10 @@ def solve(lines, min_len, max_len):
 	return min(dp[I - 1][J - 1])
 
 def part_1(lines):
-	return solve(lines, 0, 3)
+	return solve(lines, 1, 3)
 
 def part_2(lines):
-	return solve(lines, 3, 10)
+	return solve(lines, 4, 10)
 
 if __name__ == '__main__':
 	main()
