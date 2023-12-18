@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/s0FWetR6mXI
+
 import argparse, math, sys, re, functools, operator, itertools, heapq
 from collections import defaultdict, Counter
 #sys.setrecursionlimit(100000000)
@@ -116,7 +118,7 @@ def part_1(lines):
 		assert not in_loop
 		assert enter == 0
 
-	s += len(loop) - 1
+	s += len(loop)
 	return s
 
 def vec_mult(c, v):
