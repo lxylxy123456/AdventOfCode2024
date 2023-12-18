@@ -47,43 +47,35 @@ def vec_neg(v):
 def vec_add(v1, v2):
 	return tuple(map(operator.add, v1, v2))
 
-def part_1(lines):
-	# TODO: compute start
-	loop = [(250, 60)]
-	conn = defaultdict(set)
+def solve_1(segments):
+	di = -min(map(lambda x: x[0][0], segments))
+	dj = -min(map(lambda x: x[0][1], segments))
 
-	for i in lines:
-		matched = re.fullmatch('([LRUD]) (\d+) \(\#([0-9a-f]{6})\)', i)
-		direction, length, color = matched.groups()
-		length = int(length)
-		color = int(color, 16)
+	loop = [(di, dj)]
+	conn = defaultdict(set)
+	for cur, direction, length in segments:
+		assert loop[-1] == vec_add(cur, (di, dj))
 		for i in range(length):
 			cur = loop[-1]
-			v = V[direction]
-			nex = vec_add(cur, v)
+			nex = vec_add(cur, direction)
 			loop.append(nex)
-			conn[cur].add(v)
-			conn[nex].add(vec_neg(v))
+			conn[cur].add(direction)
+			conn[nex].add(vec_neg(direction))
 
-	assert loop[0] == loop[-1]
+	I = max(map(lambda x: x[0][0], segments)) + di + 1
+	J = max(map(lambda x: x[0][1], segments)) + dj + 1
 	loop = set(loop)
 
-	#print(max(map(operator.itemgetter(0), loop)))
-	#print(max(map(operator.itemgetter(1), loop)))
-	#print(loop)
-	#print(conn)
-
+	# From day 10
 	s = 0
-	# TODO: constant
-	for x in range(500):
+	for x in range(I):
 		in_loop = False
 		# 0: not on loop
 		# -1: enter from top
 		# 1: enter from bottom
 		enter = 0
 		#print(x)
-		# TODO: constant
-		for y in range(500):
+		for y in range(J):
 			#print(in_loop, enter, end='\t')
 			if (x, y) in loop:
 				if enter == 0:
@@ -124,26 +116,8 @@ def part_1(lines):
 def vec_mult(c, v):
 	return tuple(map(lambda x: c * x, v))
 
-def part_2(lines):
+def solve_2(segments):
 	s = 0
-	cur = (0, 0)
-	# [((curx, cury), dir, length), ...]
-	segments = []
-	for i in lines:
-		matched = re.fullmatch('([LRUD]) (\d+) \(\#([0-9a-f]{6})\)', i)
-		direction, length, color = matched.groups()
-
-		#direction = V[direction]
-		#length = int(length)
-
-		direction = {'0': VR, '1': VD, '2': VL, '3': VU, }[color[-1]]
-		length = int(color[:-1], 16)
-
-		segments.append((cur, direction, length))
-		cur = vec_add(cur, vec_mult(length, direction))
-
-	assert cur == (0, 0)
-
 	for index, (cur, direction, length) in enumerate(segments):
 		prev_dir = segments[(index - 1 + len(segments)) % len(segments)][1]
 		next_dir = segments[(index + 1 + len(segments)) % len(segments)][1]
@@ -168,14 +142,37 @@ def part_2(lines):
 			#print('+', (cur[0] + 1), '*', (length + adj))
 		else:
 			pass
+	return s
 
-	nodes = list(map(operator.itemgetter(0), segments))
-	#s += max(map(operator.itemgetter(0), nodes)) - min(map(operator.itemgetter(0), nodes))
-	# TODO: ???
-	#s -= 1
+def part_1(lines):
+	cur = (0, 0)
+	# [((curx, cury), dir, length), ...]
+	segments = []
+	for i in lines:
+		matched = re.fullmatch('([LRUD]) (\d+) \(\#([0-9a-f]{6})\)', i)
+		direction, length, color = matched.groups()
+		direction = V[direction]
+		length = int(length)
+		segments.append((cur, direction, length))
+		cur = vec_add(cur, vec_mult(length, direction))
+	assert cur == (0, 0)
+	s = solve_1(segments)
+	assert s == solve_2(segments)
+	return s
 
-	#print(952408144115)
-	#print(s - 952408144115)
+def part_2(lines):
+	cur = (0, 0)
+	# [((curx, cury), dir, length), ...]
+	segments = []
+	for i in lines:
+		matched = re.fullmatch('([LRUD]) (\d+) \(\#([0-9a-f]{6})\)', i)
+		direction, length, color = matched.groups()
+		direction = { '0': VR, '1': VD, '2': VL, '3': VU }[color[-1]]
+		length = int(color[:-1], 16)
+		segments.append((cur, direction, length))
+		cur = vec_add(cur, vec_mult(length, direction))
+	assert cur == (0, 0)
+	s = solve_2(segments)
 	return s
 
 if __name__ == '__main__':
