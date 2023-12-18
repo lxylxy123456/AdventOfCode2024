@@ -134,7 +134,7 @@ def part_2(lines):
 					s += 1
 		assert not in_loop
 		assert enter == 0
-	
+
 	return s
 
 if __name__ == '__main__':
