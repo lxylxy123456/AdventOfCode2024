@@ -74,6 +74,24 @@ def run_workflow(wf, xmas):
 			cur = jmp
 			break
 
+def run_workflow_recursive(wf, xmas, cur='in', ind=0):
+	x, m, a, s = xmas
+	part = {'x': x, 'm': m, 'a': a, 's': s}
+
+	if cur == 'A':
+		return True
+	if cur == 'R':
+		return False
+	var, op, operand, jmp = wf[cur][ind]
+	if var is not None:
+		op = {
+			'>': operator.gt,
+			'<': operator.lt,
+		}[op]
+		if not op(part[var], operand):
+			return run_workflow_recursive(wf, xmas, cur, ind + 1)
+	return run_workflow_recursive(wf, xmas, jmp, 0)
+
 def part_1(lines):
 	total = 0
 	lines = iter(lines)
@@ -81,29 +99,52 @@ def part_1(lines):
 	parts = read_parts(lines)
 
 	for x, m, a, s in parts:
-		if run_workflow(wf, (x, m, a, s)):
+		ans = run_workflow(wf, (x, m, a, s))
+		ans2 = run_workflow_recursive(wf, (x, m, a, s))
+		assert ans == ans2
+		if ans:
 			total += x + m + a + s
 
 	return total
 
-def run_workflow_range(wf, part, cur, ind):
-	cur = 'in'
-	while True:
-		if cur == 'A':
-			return functools.reduce(map(len, part.values()))
-		if cur == 'R':
-			return 0
-		for var, op, operand, jmp in wf[cur]:
-			if var is not None:
-				if 
-				op = {
-					'>': operator.gt,
-					'<': operator.lt,
-				}[op]
-				if not op(part[var], operand):
-					continue
-			cur = jmp
-			break
+def range_op(rng, op, operand):
+	if op == '>':
+		return range(max(rng.start, operand + 1), rng.stop)
+	elif op == '>=':
+		return range(max(rng.start, operand), rng.stop)
+	elif op == '<':
+		return range(rng.start, min(operand, rng.stop))
+	elif op == '<=':
+		return range(rng.start, min(operand + 1, rng.stop))
+	else:
+		raise ValueError
+
+def run_workflow_range(wf, part, cur='in', ind=0):
+	if not all(part.values()):
+		return 0
+	if cur == 'A':
+		return functools.reduce(operator.mul, map(len, part.values()))
+	if cur == 'R':
+		return 0
+	var, op, operand, jmp = wf[cur][ind]
+
+	s = 0
+	if var is not None:
+		part_false = part.copy()
+		part_true = part.copy()
+		if op == '<':
+			part_true[var] = range_op(part_true[var], '<', operand)
+			part_false[var] = range_op(part_false[var], '>=', operand)
+		else:
+			assert op == '>'
+			part_true[var] = range_op(part_true[var], '>', operand)
+			part_false[var] = range_op(part_false[var], '<=', operand)
+	else:
+		part_false = {'x': [], 'm': [], 'a': [], 's': []}
+		part_true = part
+	s += run_workflow_range(wf, part_false, cur, ind + 1)
+	s += run_workflow_range(wf, part_true, jmp, 0)
+	return s
 
 def part_2(lines):
 	s = 0
