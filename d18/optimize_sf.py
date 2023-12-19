@@ -1,7 +1,7 @@
 """
-Refactor using https://en.wikipedia.org/wiki/Shoelace_formula and handle
-perimeter properly. Inspired by
-https://github.com/bvandewalle/aoc2023/blob/main/18/main.go .
+Refactor area calculation using https://en.wikipedia.org/wiki/Shoelace_formula .
+Handle perimeter properly using https://en.wikipedia.org/wiki/Pick's_theorem .
+Inspired by https://github.com/bvandewalle/aoc2023/blob/main/18/main.go .
 """
 
 import argparse, math, sys, re, functools, operator, itertools, heapq
