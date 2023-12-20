@@ -107,34 +107,36 @@ def part_2(lines):
 
 	graphviz(nodes)
 
+	if 'rx' not in nodes:
+		return NotImplemented
+
 	stats = defaultdict(list)
 
 	for s in range(100000000000000000000000000000000000000000000000000):
+		#if s % 10000 == 0:
+		#	print(s)
 		# (src, node, is_high)
-		if s % 10000 == 0:
-			print(s)
 		signals = deque()
 		signals.append((None, 'broadcaster', False))
-
-		#print(sum(nodes['gl'][3].values()), end=' ', flush=True)
-		if len(stats) == 4 and min(map(len, stats.values())) > 4:
-			break
-
 		while signals:
 			src, node, is_high = signals.popleft()
 			if src in nodes['qt'][2] and is_high:
 				stats[src].append(s)
 			process_signal(nodes, signals, src, node, is_high)
 
+		#print(sum(nodes['gl'][3].values()), end=' ', flush=True)
+		if len(stats) == 4 and min(map(len, stats.values())) > 4:
+			break
+
 	# Check period
+	diffs = []
 	for i in stats.values():
 		diff = i[0] + 1
 		for jndex, j in enumerate(i):
 			assert j == (1 + jndex) * diff - 1
-		print(diff)
+		diffs.append(diff)
 
-	print(stats)
-
+	s = functools.reduce(operator.mul, diffs)
 	return s
 
 if __name__ == '__main__':
