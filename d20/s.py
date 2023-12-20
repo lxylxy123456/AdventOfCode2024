@@ -136,7 +136,7 @@ def part_2(lines):
 			assert j == (1 + jndex) * diff - 1
 		diffs.append(diff)
 
-	s = functools.reduce(operator.mul, diffs)
+	s = functools.reduce(math.lcm, diffs)
 	return s
 
 if __name__ == '__main__':
