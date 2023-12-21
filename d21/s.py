@@ -71,11 +71,12 @@ def compute_dist(lines, start):
 
 def part_1(lines):
 	s = 0
+	STEPS = 64
 	start = get_start(lines)
 	dist = compute_dist(lines, start)
 	for i in dist:
 		for j in i:
-			if j is not None and j <= 64 and j % 2 == 0:
+			if j is not None and j <= STEPS and j % 2 == STEPS % 2:
 				s += 1
 	return s
 
@@ -135,9 +136,13 @@ def part_2(lines):
 
 	STEPS = 26501365
 
-	# Go one way
 	n = STEPS // I + 3
 	s = 0
+
+	# Current square
+	s += cover_square(start, STEPS)
+
+	# Go one way
 	for i in range(n):
 		steps = STEPS - (S + 1) - i * I
 		s += cover_square((I - 1, S), steps)
@@ -147,9 +152,8 @@ def part_2(lines):
 	assert steps < 0
 
 	# Go multiple ways
-	for i in range(1, n):
-		# 1 -> 0, 2 -> 1, 3 -> 2, 4 -> 3
-		m = i - 1
+	for i in range(n):
+		m = i + 1
 		assert m >= 0
 		steps = STEPS - (S + 1) * 2 - i * I
 		s += m * cover_square((I - 1, 0), steps)
@@ -158,6 +162,8 @@ def part_2(lines):
 		s += m * cover_square((I - 1, I - 1), steps)
 	assert steps < 0
 
+	#print(STEPS, s, (STEPS + 1)**2)
+	#assert s == (STEPS + 1)**2
 	return s
 
 if __name__ == '__main__':
