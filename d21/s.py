@@ -36,17 +36,21 @@ def vec_add(v1, v2):
 def vec_mult(c, v):
 	return tuple(map(lambda x: c * x, v))
 
-def part_1(lines):
-	s = 0
-	dist = []
+def get_start(lines):
 	start = None
+	for index, i in enumerate(lines):
+		for jndex, j in enumerate(i):
+			if j == 'S':
+				start = (index, jndex)
+	assert start is not None
+	return start
+
+def compute_dist(lines, start):
+	dist = []
 	for index, i in enumerate(lines):
 		dist.append([])
 		for jndex, j in enumerate(i):
 			dist[-1].append(None)
-			if j == 'S':
-				start = (index, jndex)
-	assert start is not None
 
 	in_map = lambda x, y: x in range(len(lines)) and y in range(len(lines[0]))
 	cur_dist = 0
@@ -57,12 +61,18 @@ def part_1(lines):
 			dist[x][y] = cur_dist
 			for dx, dy in VECS:
 				nx, ny = vec_add((x, y), (dx, dy))
-				if (in_map(nx, ny) and lines[nx][ny] == '.' and
+				if (in_map(nx, ny) and lines[nx][ny] in 'S.' and
 					dist[nx][ny] is None):
 					new_frontier.add((nx, ny))
 		frontier = new_frontier
 		cur_dist += 1
 
+	return dist
+
+def part_1(lines):
+	s = 0
+	start = get_start(lines)
+	dist = compute_dist(lines, start)
 	for i in dist:
 		for j in i:
 			if j is not None and j <= 64 and j % 2 == 0:
@@ -70,9 +80,84 @@ def part_1(lines):
 	return s
 
 def part_2(lines):
+	start = get_start(lines)
+
+	I = len(lines)
+	assert I == len(lines[0])
+	for i in range(I):
+		assert lines[0][i] == '.'
+		assert lines[-1][i] == '.'
+		assert lines[i][0] == '.'
+		assert lines[i][-1] == '.'
+		assert lines[i][start[1]] in 'S.'
+		assert lines[i][start[1]] in 'S.'
+		assert lines[start[0]][i] in 'S.'
+		assert lines[start[0]][i] in 'S.'
+
+	S = start[0]
+	assert S == start[1]
+	assert S * 2 + 1 == I
+
+	STARTS = [start, (0, 0), (I - 1, 0), (I - 1, I - 1), (0, I - 1),
+			  (0, start[1]), (I - 1, start[1]), (start[0], 0),
+			  (start[0], I - 1)]
+
+	@functools.cache
+	def _compute_dist(s):
+		assert s in STARTS
+		return compute_dist(lines, s)
+
+	@functools.cache
+	def _compute_count(start):
+		dist = _compute_dist(start)
+		c = Counter(itertools.chain.from_iterable(dist))
+		del c[None]
+		ans = []
+		for i in range(max(c.keys()) + 1):
+			if i < 2:
+				ans.append(c[i])
+			else:
+				ans.append(ans[-2] + c[i])
+		assert len(ans) < I * 2, 'Assumption failed: need to detour'
+		return ans
+
+	def cover_square(start, steps):
+		if steps < 0:
+			return 0
+		c = _compute_count(start)
+		try:
+			return c[steps]
+		except IndexError:
+			if (steps - len(c)) % 2 == 0:
+				return c[len(c) - 2]
+			else:
+				return c[len(c) - 1]
+
+	STEPS = 26501365
+
+	# Go one way
+	n = STEPS // I + 3
 	s = 0
-	for i in lines:
-		i
+	for i in range(n):
+		steps = STEPS - (S + 1) - i * I
+		s += cover_square((I - 1, S), steps)
+		s += cover_square((S, I - 1), steps)
+		s += cover_square((0, S), steps)
+		s += cover_square((S, 0), steps)
+	assert steps < 0
+
+	# Go multiple ways
+	for i in range(1, n):
+		# 1 -> 0, 2 -> 1, 3 -> 2, 4 -> 3
+		m = i - 1
+		assert m >= 0
+		steps = STEPS - (S + 1) * 2 - i * I
+		s += m * cover_square((I - 1, 0), steps)
+		s += m * cover_square((0, I - 1), steps)
+		s += m * cover_square((0, 0), steps)
+		s += m * cover_square((I - 1, I - 1), steps)
+	assert steps < 0
+
 	return s
 
 if __name__ == '__main__':
