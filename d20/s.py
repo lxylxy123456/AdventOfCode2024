@@ -112,6 +112,14 @@ def part_2(lines):
 
 	stats = defaultdict(list)
 
+	# Analyzed graph manually, try to be a little bit general
+	assert nodes['rx'][0] == ''
+	assert len(nodes['rx'][2]) == 1
+	n = nodes['rx'][2][0]
+	assert nodes[n][0] == '&'
+	nn = nodes[n][2]
+	assert len(nn) in range(2, 7)
+
 	for s in range(100000000000000000000000000000000000000000000000000):
 		#if s % 10000 == 0:
 		#	print(s)
@@ -120,12 +128,12 @@ def part_2(lines):
 		signals.append((None, 'broadcaster', False))
 		while signals:
 			src, node, is_high = signals.popleft()
-			if src in nodes['qt'][2] and is_high:
+			if src in nn and is_high:
 				stats[src].append(s)
 			process_signal(nodes, signals, src, node, is_high)
 
 		#print(sum(nodes['gl'][3].values()), end=' ', flush=True)
-		if len(stats) == 4 and min(map(len, stats.values())) > 4:
+		if len(stats) == len(nn) and min(map(len, stats.values())) > 4:
 			break
 
 	# Check period
