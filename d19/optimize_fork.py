@@ -26,9 +26,9 @@ def main():
 		f = sys.stdin
 	lines = list(read_lines(f))
 	if not args.two:
-		print(part_1(lines))
+		print(part_1(lines), flush=True)
 	if not args.one:
-		print(part_2(lines))
+		print(part_2(lines), flush=True)
 
 def read_wf(lines):
 	wf = {}
