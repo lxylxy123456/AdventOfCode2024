@@ -94,11 +94,13 @@ def part_2(lines):
 	bricks = read_bricks(lines)
 	supports = get_supports(bricks)
 	s = 0
-	print(supports)
+	#print(supports)
 	for index, i in enumerate(bricks):
+		#print(i)
 		collapsed = {i.id}
-		for j in bricks[index + 1:]:
-			if supports[j.id].issubset(collapsed):
+		for j in bricks[index:]:
+			if supports[j.id] and supports[j.id].issubset(collapsed):
+				#print('\t', j)
 				collapsed.add(j.id)
 		s += len(collapsed) - 1
 	return s
