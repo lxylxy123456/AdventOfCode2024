@@ -48,16 +48,21 @@ class Brick:
 	def __repr__(self):
 		return 'Brick%s' % repr(tuple(self.__dict__.values()))
 
-def part_1(lines):
+def read_bricks(lines):
 	bricks = []
 	for index, i in enumerate(lines):
 		data = list(map(lambda x: list(map(int, x.split(','))), i.split('~')))
 		bricks.append(Brick(index, data))
-	for index, i in enumerate(bricks):
-		for j in bricks[:index]:
-			assert not (i.xy_intersect(j) and i.z_intersect(j))
+	if not 'sanity check':
+		for index, i in enumerate(bricks):
+			for j in bricks[:index]:
+				assert not (i.xy_intersect(j) and i.z_intersect(j))
 	bricks.sort(key=lambda x: x.z0)
-	unsafe_bricks = set()
+	return bricks
+
+def get_supports(bricks):
+	# supports[i] = support for blocks[i]
+	supports = defaultdict(set)
 	for index, i in enumerate(bricks):
 		support = set()
 		adj_ground = 0
@@ -69,18 +74,33 @@ def part_1(lines):
 				if adj_ground == j.z1:
 					support.add(j.id)
 		i.fall(adj_ground)
+		supports[i.id] = support
+		#print(i.id, support)
+	return supports
+
+def part_1(lines):
+	bricks = read_bricks(lines)
+	supports = get_supports(bricks)
+	unsafe_bricks = set()
+	for support in supports.values():
 		if len(support) == 1:
 			unsafe_bricks.update(support)
-		#print(i.id, support)
 	s = len(bricks) - len(unsafe_bricks)
 	#print(unsafe_bricks)
 	#print(*bricks, sep='\n')
 	return s
 
 def part_2(lines):
+	bricks = read_bricks(lines)
+	supports = get_supports(bricks)
 	s = 0
-	for i in lines:
-		i
+	print(supports)
+	for index, i in enumerate(bricks):
+		collapsed = {i.id}
+		for j in bricks[index + 1:]:
+			if supports[j.id].issubset(collapsed):
+				collapsed.add(j.id)
+		s += len(collapsed) - 1
 	return s
 
 if __name__ == '__main__':
