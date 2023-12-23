@@ -1,3 +1,5 @@
+# Youtube: https://youtu.be/TYKiWuqlluU
+
 import argparse, math, sys, re, functools, operator, itertools, heapq
 from collections import defaultdict, Counter, deque
 sys.setrecursionlimit(100000000)
@@ -162,8 +164,8 @@ def part_2(lines):
 		ans = -1
 		path.add(p)
 		for np, dd in g.E[p].items():
-			assert in_map(*np)
-			assert lines[np[0]][np[1]] != '#'
+			#assert in_map(*np)
+			#assert lines[np[0]][np[1]] != '#'
 			ans = max(ans, visit(np, dist + dd, path))
 		path.remove(p)
 		return ans
