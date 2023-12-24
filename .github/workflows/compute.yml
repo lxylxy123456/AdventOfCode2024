@@ -9,6 +9,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Pip
+      run: |
+        pip3 install sympy
     - name: Build
       run: |
         for i in d*; do
