@@ -1,3 +1,5 @@
+# https://youtu.be/gUqzAUnT-b8
+
 import argparse, math, sys, re, functools, operator, itertools, heapq, random
 from collections import defaultdict, Counter, deque, namedtuple
 from fractions import Fraction
