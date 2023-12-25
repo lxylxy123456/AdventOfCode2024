@@ -3,10 +3,10 @@ import os, re, jinja2
 t = jinja2.Template('''
 # Advent of Code 2023
 
-| day | question | example | input | solution | Youtube | Optimize |
+| day | question | example | input | solution | Youtube | other |
 |-----|----------|---------|-------|----------|---------|----------|
 {%- for day in days %}
-|{{ day.dir }}|{{ day.qs }}|{{ day.exs }}|{{ day.ins }}|{{ day.sols }}|{{ day.youtube }}|{{ day.opts }}|
+|{{ day.dir }}|{{ day.qs }}|{{ day.exs }}|{{ day.ins }}|{{ day.sols }}|{{ day.youtube }}|{{ day.others }}|
 {%- endfor %}
 
 My time:
@@ -64,7 +64,6 @@ def get_youtube_link(d):
 	links.update(matched.groups())
 	assert lines[3] == ''
 	line = open(os.path.join(d, 's.py')).read().split('\n')[0]
-	print(d, line)
 	matched = re.fullmatch(r'# Youtube: https://youtu\.be/(.{11})', line)
 	assert matched
 	links.update(matched.groups())
@@ -79,7 +78,7 @@ for i in range(1, 26):
 	exs = []
 	ins = []
 	sols = []
-	opts = []
+	others = []
 	youtube = ''
 	for i in list(files):
 		matched = re.fullmatch(r'ex(.*)\.txt', i)
@@ -110,11 +109,11 @@ for i in range(1, 26):
 			youtube = get_youtube_link(d)
 			files.remove(i)
 			continue
-		matched = re.fullmatch(r'optimize_(.*)\.py', i)
-		if matched:
-			opts.append(file_link(d + '/' + i, matched.groups()[0]))
+		if i in ['compute.sh']:
 			files.remove(i)
 			continue
+		if 1:
+			others.append(file_link(d + '/' + i))
 	day = {
 		'name': d,
 		'dir': file_link(d),
@@ -122,7 +121,7 @@ for i in range(1, 26):
 		'exs': ', '.join(exs),
 		'ins': ', '.join(ins),
 		'sols': ', '.join(sols),
-		'opts': ', '.join(opts),
+		'others': ', '.join(others),
 		'youtube': youtube,
 	}
 	dict_render['days'].append(day)
