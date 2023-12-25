@@ -1,4 +1,4 @@
-import argparse, math, sys, re, functools, operator, itertools, heapq
+import argparse, math, sys, re, functools, operator, itertools, heapq, copy
 from collections import defaultdict, Counter, deque
 sys.setrecursionlimit(100000000)
 #A = list(map(int, input().split()))
@@ -29,8 +29,11 @@ def main():
 		print(part_2(lines))
 
 class Graph:
-	def __init__(self):
-		self.E = defaultdict(set)
+	def __init__(self, E=None):
+		if E is None:
+			self.E = defaultdict(set)
+		else:
+			self.E = E
 	def add_edge(self, v1, v2):
 		assert v1 != v2
 		assert v2 not in self.E[v1]
@@ -47,6 +50,8 @@ class Graph:
 			for i in v:
 				if k < i:
 					yield k, i
+	def copy(self):
+		return Graph(copy.deepcopy(self.E))
 
 def read_graph(lines):
 	g = Graph()
@@ -80,10 +85,7 @@ def dfs_clusters(g):
 
 	return clusters
 
-def part_1(lines):
-	s = 0
-	g = read_graph(lines)
-	graphviz(g)
+def part_1_try_1(g):
 	all_edges = list(g.all_edges())
 	for index, i in enumerate(all_edges):
 		print(index, '/', len(all_edges))
@@ -103,6 +105,53 @@ def part_1(lines):
 				g.add_edge(*k)
 			g.add_edge(*j)
 		g.add_edge(*i)
+
+def dfs_path(g, b, e):
+	# Find path from b to e
+	visited = defaultdict(set)
+
+	def visit(v):
+		visited[v] = True
+		if v == e:
+			return [v]
+		for i in g.E[v]:
+			if not visited[i]:
+				ans = visit(i)
+				if ans is not None:
+					ans.append(v)
+					return ans
+		return None
+
+	return visit(b)
+
+def part_1(lines):
+	s = 0
+	g = read_graph(lines)
+	#graphviz(g)
+	#part_1_try_1(g)
+	all_edges = list(g.all_edges())
+	pg = Graph()
+	for v1, v2 in all_edges:
+		gg = g.copy()
+		gg.remove_edge(v1, v2)
+		for i in range(3):
+			path = dfs_path(gg, v1, v2)
+			if path is None:
+				break
+			for i, j in zip(path, path[1:]):
+				gg.remove_edge(i, j)
+		else:
+			pg.add_edge(v1, v2)
+			print('pass:', v1, v2)
+			continue
+		print('fail:', v1, v2)
+
+	clusters = dfs_clusters(pg)
+	if len(clusters) == 2:
+		print(list(map(len, clusters)))
+		return functools.reduce(operator.mul, map(len, clusters))
+
+	graphviz(pg)
 	return s
 
 def part_2(lines):
