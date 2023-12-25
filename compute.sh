@@ -7,7 +7,11 @@ cd "$1"
 TMPD="$(mktemp -d)"
 
 grep '^Your puzzle answer was' q.txt | grep -oE '[0-9]+' > "$TMPD/expected"
-diff <(wc -l < "$TMPD/expected") <(echo 2)
+if [ "$(basename "$PWD")" = "d25" ]; then
+	diff <(wc -l < "$TMPD/expected") <(echo 1)
+else
+	diff <(wc -l < "$TMPD/expected") <(echo 2)
+fi
 
 for i in s*.py; do
 	time python3 "$i" in.txt | tee -a "$TMPD/actual"

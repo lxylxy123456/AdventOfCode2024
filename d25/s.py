@@ -144,9 +144,9 @@ def part_1(lines):
 				gg.remove_edge(i, j)
 		else:
 			pg.add_edge(v1, v2)
-			print('pass:', v1, v2)
+			#print('pass:', v1, v2)
 			continue
-		print('fail:', v1, v2)
+		#print('fail:', v1, v2)
 
 	clusters = dfs_clusters(pg)
 	if len(clusters) == 2:
