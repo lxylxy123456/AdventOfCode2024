@@ -3,13 +3,18 @@ import os, re, jinja2
 t = jinja2.Template('''
 # Advent of Code 2023
 
+<https://adventofcode.com/2023>
+
+## Files
+
 | day | question | example | input | solution | Youtube | other |
 |-----|----------|---------|-------|----------|---------|----------|
 {%- for day in days %}
 |{{ day.dir }}|{{ day.qs }}|{{ day.exs }}|{{ day.ins }}|{{ day.sols }}|{{ day.youtube }}|{{ day.others }}|
 {%- endfor %}
 
-My time:
+## My time
+
 ```
       -------Part 1--------   -------Part 2--------
 Day       Time  Rank  Score       Time  Rank  Score
