@@ -133,6 +133,8 @@ def part_1(lines):
 	#part_1_try_1(g)
 	all_edges = list(g.all_edges())
 	pg = Graph()
+	for v in g.E:
+		pg.E[v]
 	for v1, v2 in all_edges:
 		gg = g.copy()
 		gg.remove_edge(v1, v2)
@@ -149,12 +151,29 @@ def part_1(lines):
 		#print('fail:', v1, v2)
 
 	clusters = dfs_clusters(pg)
-	if len(clusters) == 2:
-		print(list(map(len, clusters)))
-		return functools.reduce(operator.mul, map(len, clusters))
+	print(list(map(len, clusters)))
 
-	graphviz(pg)
-	return s
+	vertex_lookup = {}
+	for index, i in enumerate(clusters):
+		for j in i:
+			vertex_lookup[j] = index
+
+	# Some cases we get more than 2 clusters. Now need to guess.
+	for memberships in range(1, (1 << len(clusters)) - 1):
+		edge_count = 0
+		for i, j in g.all_edges():
+			mi = bool(memberships & (1 << vertex_lookup[i]))
+			mj = bool(memberships & (1 << vertex_lookup[j]))
+			if mi != mj:
+				edge_count += 1
+		assert edge_count >= 3
+		if edge_count == 3:
+			s = Counter()
+			for index, i in enumerate(clusters):
+				s[bool(memberships & (1 << index))] += len(i)
+			return s[True] * s[False]
+
+	raise RuntimeError
 
 def part_2(lines):
 	s = 0
