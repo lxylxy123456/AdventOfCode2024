@@ -16,8 +16,7 @@ t = jinja2.Template('''
 ## My time
 
 ```
-      -------Part 1--------   -------Part 2--------
-Day       Time  Rank  Score       Time  Rank  Score
+{{ my_time }}
 ```
 
 '''.lstrip('\n'))
@@ -107,6 +106,13 @@ for i in range(1, 26):
 		'youtube': youtube,
 	}
 	dict_render['days'].append(day)
+
+lines = open('time.txt').read().split('\n')[1:]
+while lines and '-Part 1-' not in lines[0] and '-Part 2-' not in lines[0]:
+	lines.pop(0)
+while lines and lines[-1] == '':
+	lines.pop()
+dict_render['my_time'] = '\n'.join(lines)
 
 print(t.render(**dict_render), file=open('README.md', 'w'))
 
