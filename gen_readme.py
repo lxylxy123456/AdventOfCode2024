@@ -32,34 +32,36 @@ def file_link(href, name=None):
 	return '[%s](%s)' % (name, href)
 
 def get_youtube_link(d):
-	lines = open(os.path.join(d, 'README.md')).read().split('\n')
-	links = set()
-	assert len(lines) == 4
-	assert lines[0] == 'Youtube Video:'
-	assert lines[1] == ''
-	matched = re.fullmatch(r'\[\!\[Youtube Video\]\(http://img.youtube.com/vi/'
-						r'(.{11})/0\.jpg\)\]\(http://www\.youtube\.com/watch\?'
-						r'v=(.{11})\)', lines[2])
-	assert matched
-	links.update(matched.groups())
-	assert lines[3] == ''
 	line = open(os.path.join(d, 's.py')).read().split('\n')[0]
 	matched = re.fullmatch(r'# Youtube: https://youtu\.be/(.{11})', line)
-	assert matched
-	links.update(matched.groups())
-	assert len(links) == 1
-	link = next(iter(links))
+	if not matched:
+		return None
+	link, = matched.groups()
+	readme_content = ''.join([
+		'Youtube Video:\n',
+		'\n',
+		'[![Youtube Video](http://img.youtube.com/vi/%s/0.jpg)]' % link,
+		'(http://www.youtube.com/watch?v=%s)\n' % link,
+	])
+	readme_path = os.path.join(d, 'README.md')
+	if os.path.exists(readme_path):
+		assert open(readme_path).read() == readme_content
+	else:
+		open(readme_path, 'w').write(readme_content)
 	return file_link('https://youtu.be/%s' % link, '`%s`' % link)
 
 for i in range(1, 26):
 	d = 'd%02d' % i
+	if not os.path.exists(d):
+		print('Does not exist:', repr(d))
+		continue
 	files = sorted(os.listdir(d))
 	qs = []
 	exs = []
 	ins = []
 	sols = []
 	others = []
-	youtube = ''
+	youtube = get_youtube_link(d)
 	for i in list(files):
 		matched = re.fullmatch(r'ex(.*)\.txt', i)
 		if matched:
@@ -86,7 +88,7 @@ for i in range(1, 26):
 			files.remove(i)
 			continue
 		if i == 'README.md':
-			youtube = get_youtube_link(d)
+			#youtube = get_youtube_link(d)
 			files.remove(i)
 			continue
 		if i in ['compute.sh']:
