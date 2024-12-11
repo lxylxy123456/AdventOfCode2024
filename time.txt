@@ -3,6 +3,11 @@ These are your personal leaderboard times. Rank is your position on that leaderb
       --------Part 1---------   --------Part 2---------
 Day       Time    Rank  Score       Time    Rank  Score
  10   00:08:45     834      0   00:10:31     637      0
+  9       >24h   48609      0       >24h   38173      0
+  8       >24h   54683      0       >24h   52379      0
+  7       >24h   65601      0       >24h   62368      0
+  6       >24h   83084      0       >24h   61668      0
+  5       >24h   95344      0       >24h   84584      0
   4       >24h  112817      0       >24h  104048      0
   3       >24h  144840      0       >24h  130968      0
   2       >24h  180967      0       >24h  145591      0
