@@ -50,19 +50,16 @@ def part_1(lines):
 	s = functools.reduce(operator.mul, c.values())
 	return s
 
-def part_2(lines):
+def part_2_manual(lines):
 	s = 0
 	X, Y = 101, 103
-	#X, Y = 11, 7
 	T = 100
-	c = Counter()
 	robots = []
 	for i in lines:
 		matched = re.fullmatch('p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)', i)
 		px, py, vx, vy = map(int, matched.groups())
 		robots.append((px, py, vx, vy))
-	#for T in range(1000):
-	for T in [7709]:
+	for T in range(1000):
 		canvas = []
 		for y in range(Y):
 			canvas.append([])
@@ -78,6 +75,42 @@ def part_2(lines):
 		input(str(T))
 		# 33|, 87-, 134|, 190-, 235|, 293-, 336|
 		# 33 + 101 * x = 87 + 103 * y
+		s = 7709
+	return s
+
+def part_2(lines):
+	s = None
+	X, Y = 101, 103
+	T = 100
+	robots = []
+	for i in lines:
+		matched = re.fullmatch('p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)', i)
+		px, py, vx, vy = map(int, matched.groups())
+		robots.append((px, py, vx, vy))
+	for T in range(X * Y):
+		canvas = []
+		for y in range(Y):
+			canvas.append([])
+			for x in range(X):
+				canvas[-1].append(0)
+		for px, py, vx, vy in robots:
+			fx = (px + vx * T) % X
+			fy = (py + vy * T) % Y
+			canvas[fy][fx] = 1
+		# CV
+		for y in range(Y):
+			for x in range(X):
+				if (canvas[(y + 0) % Y][(x + 0) % X] == 1 and
+					canvas[(y + 0) % Y][(x + 1) % X] == 1 and
+					canvas[(y + 1) % Y][(x + 0) % X] == 1 and
+					canvas[(y + 1) % Y][(x + 1) % X] == 0 and
+					canvas[(y + 0) % Y][(x + 2) % X] == 1 and
+					canvas[(y + 2) % Y][(x + 0) % X] == 1 and
+					canvas[(y + 0) % Y][(x + 3) % X] == 1 and
+					canvas[(y + 3) % Y][(x + 0) % X] == 1):
+					s = T
+		if s is not None:
+			break
 	return s
 
 if __name__ == '__main__':
