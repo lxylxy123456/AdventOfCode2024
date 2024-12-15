@@ -114,7 +114,7 @@ def read_input2(lines):
 	assert rx is not None and ry is not None
 	return m, a, X, Y, rx, ry
 
-def push2(m, X, Y, rx, ry, dx, dy):
+def push2_buggy(m, X, Y, rx, ry, dx, dy):
 	# Returns (if moving, list of boxes pushed using GPS coordinates).
 	# List of boxes are sorted where furthest boxes first pushed appear first.
 	if m[rx + dx][ry + dy] == '#':
@@ -143,11 +143,65 @@ def push2(m, X, Y, rx, ry, dx, dy):
 			return False, []
 		return True, s + [(ox, oy)]
 
+def push2(m, X, Y, rx, ry, dx, dy):
+	'''
+	Compared my solution with a random solution on Reddit to find my error.
+		https://www.reddit.com/r/adventofcode/comments/1hele8m/comment/m24p2od/
+		https://gitlab.com/davidsharick/advent-of-code-2024/
+			-/blob/main/day15/day15.py
+	Minimal input that triggers the error:
+		######
+		#....#
+		#.OO.#
+		#.OO@#
+		#.OO.#
+		#....#
+		######
+
+		<>vv<<<^
+	The bug is that push2() does not return boxes layer by layer.
+	Also it does not deduplicate the list.
+	'''
+	# Returns (if moving, list of boxes pushed using GPS coordinates).
+	# List of boxes are not sorted. The caller should sort them.
+	if m[rx + dx][ry + dy] == '#':
+		return False, set()
+	elif m[rx + dx][ry + dy] == '.':
+		return True, set()
+	elif m[rx + dx][ry + dy] == '[':
+		ox, oy = rx + dx, ry + dy
+	elif m[rx + dx][ry + dy] == ']':
+		ox, oy = rx + dx, ry + dy - 1
+	else:
+		raise ValueError
+	# Continuation of previous elif's.
+	assert m[rx + dx][ry + dy] in '[]'
+	if dx:
+		assert not dy
+		s = {(ox, oy)}
+		m1, s1 = push2(m, X, Y, ox, oy, dx, dy)
+		m2, s2 = push2(m, X, Y, ox, oy + 1, dx, dy)
+		if not m1 or not m2:
+			return False, []
+		s.update(s1)
+		s.update(s2)
+		return True, s
+	else:
+		assert dy
+		m, s = push2(m, X, Y, rx + dx, ry + dy * 2, dx, dy)
+		if not m:
+			return False, []
+		s.add((ox, oy))
+		return True, s
+
 def part_2(lines):
 	s = 0
 	m, a, X, Y, rx, ry = read_input2(lines)
 	for dx, dy in a:
 		move, boxes = push2(m, X, Y, rx, ry, dx, dy)
+		# Lines below are added after finding the bug.
+		boxes = sorted(boxes, key=lambda x: (-1) * (x[0] * dx + x[1] * dy))
+		# Lines above are added after finding the bug.
 		if move:
 			for ox, oy in boxes:
 				m[ox][oy] = '.'
@@ -158,10 +212,11 @@ def part_2(lines):
 			rx += dx
 			ry += dy
 			m[rx][ry] = '@'
-		for i in m:
-			print(*i, sep='')
-		print(dx, dy)
-		input()
+		if 0:
+			for i in m:
+				print(*i, sep='')
+			print('-')
+			#input()
 	for x in range(X):
 		for y in range(Y):
 			if m[x][y] == '[':
