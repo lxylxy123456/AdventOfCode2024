@@ -59,11 +59,9 @@ def part_1(lines):
 				heapq.heappush(q, (dist + 2001, (cx - dx, cy - dy), (-dx, -dy)))
 		else:
 			raise ValueError
-	for i in lines:
-		print(i)
 	return s
 
-def dfs2(lines, X, Y, max_dist, dist, cx, cy, dx, dy, visited):
+def dfs2_bad(lines, X, Y, max_dist, dist, cx, cy, dx, dy, visited):
 	if dist > max_dist:
 		return False
 	if lines[cx][cy] == 'E':
@@ -73,13 +71,12 @@ def dfs2(lines, X, Y, max_dist, dist, cx, cy, dx, dy, visited):
 	elif lines[cx][cy] == '#':
 		return False
 	elif lines[cx][cy] in ['.', 'S']:
-		c1 = dfs2(lines, X, Y, max_dist, dist + 1, cx + dx, cy + dy, dx, dy, visited)
-		c2 = dfs2(lines, X, Y, max_dist, dist + 1001, cx + dy, cy + dx, dy, dx, visited)
-		c3 = dfs2(lines, X, Y, max_dist, dist + 1001, cx - dy, cy - dx, -dy,
-				  -dx, visited)
+		args = lines, X, Y, max_dist
+		c1 = dfs2(*args, dist + 1, cx + dx, cy + dy, dx, dy, visited)
+		c2 = dfs2(*args, dist + 1001, cx + dy, cy + dx, dy, dx, visited)
+		c3 = dfs2(*args, dist + 1001, cx - dy, cy - dx, -dy, -dx, visited)
 		if lines[cx][cy] == 'S':
-			c4 = dfs2(lines, X, Y, max_dist, dist + 2001, cx - dx, cy - dy, -dx,
-					  -dy, visited)
+			c4 = dfs2(*args, dist + 2001, cx - dx, cy - dy, -dx, -dy, visited)
 		else:
 			c4 = False
 		if any([c1, c2, c3, c4]):
@@ -90,7 +87,7 @@ def dfs2(lines, X, Y, max_dist, dist, cx, cy, dx, dy, visited):
 	else:
 		raise ValueError
 
-def part_2(lines):
+def part_2_bad(lines):
 	s = 0
 	X = len(lines)
 	Y = len(lines[0])
@@ -100,6 +97,44 @@ def part_2(lines):
 	visited = set()
 	dfs2(lines, X, Y, max_dist, 0, sx, sy, 0, 1, visited)
 	s = len(visited)
+	return s
+
+def part_2(lines):
+	s = 0
+	X = len(lines)
+	Y = len(lines[0])
+	max_dist = part_1(lines)
+	sx, sy = find_map(lines, X, Y, 'S')
+	ex, ey = find_map(lines, X, Y, 'E')
+	visited = {}
+	seats = set()
+	q = [(0, (sx, sy), (0, 1), [(sx, sy)])]
+	while q:
+		dist, (cx, cy), (dx, dy), hist = heapq.heappop(q)
+		if ((cx, cy), (dx, dy)) in visited:
+			if visited[((cx, cy), (dx, dy))] < dist:
+				continue
+			else:
+				assert visited[((cx, cy), (dx, dy))] == dist
+		else:
+			visited[((cx, cy), (dx, dy))] = dist
+		if dist > max_dist:
+			continue
+		hist = hist + [(cx, cy)]
+		if lines[cx][cy] == 'E':
+			for i in hist:
+				seats.add(i)
+		elif lines[cx][cy] == '#':
+			pass
+		elif lines[cx][cy] in ['.', 'S']:
+			heapq.heappush(q, (dist + 1, (cx + dx, cy + dy), (dx, dy), hist))
+			heapq.heappush(q, (dist + 1001, (cx + dy, cy + dx), (dy, dx), hist))
+			heapq.heappush(q, (dist + 1001, (cx - dy, cy - dx), (-dy, -dx), hist))
+			if lines[cx][cy] == 'S':
+				heapq.heappush(q, (dist + 2001, (cx - dx, cy - dy), (-dx, -dy), hist))
+		else:
+			raise ValueError
+	s = len(seats)
 	return s
 
 if __name__ == '__main__':
