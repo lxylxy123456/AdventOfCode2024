@@ -22,6 +22,7 @@
 |[d14](d14)|[q.txt](d14/q.txt)|[ex.txt](d14/ex.txt)|[in.txt](d14/in.txt)|[s.py](d14/s.py)|[`ZO83MHcgLMI`](https://youtu.be/ZO83MHcgLMI)||
 |[d15](d15)|[q.txt](d15/q.txt)|[ex.txt](d15/ex.txt), [0](d15/ex0.txt), [2](d15/ex2.txt), [3](d15/ex3.txt)|[in.txt](d15/in.txt)|[s.py](d15/s.py)|[`Mo8lxhzlCsI`](https://youtu.be/Mo8lxhzlCsI)||
 |[d16](d16)|[q.txt](d16/q.txt)|[ex.txt](d16/ex.txt), [2](d16/ex2.txt)|[in.txt](d16/in.txt)|[s.py](d16/s.py)|[`TbENqu_O1zc`](https://youtu.be/TbENqu_O1zc)||
+|[d17](d17)|[q.txt](d17/q.txt)|[ex.txt](d17/ex.txt), [2](d17/ex2.txt)|[in.txt](d17/in.txt)|[s.py](d17/s.py)|[`irtIc2NfqCM`](https://youtu.be/irtIc2NfqCM)||
 
 ## My time
 

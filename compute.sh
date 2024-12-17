@@ -6,7 +6,7 @@ cd "$1"
 
 TMPD="$(mktemp -d)"
 
-grep '^Your puzzle answer was' q.txt | grep -oE '[0-9]+' > "$TMPD/expected"
+grep '^Your puzzle answer was' q.txt | grep -oE '[0-9,]+' > "$TMPD/expected"
 if [ "$(basename "$PWD")" = "d25" ]; then
 	diff <(wc -l < "$TMPD/expected") <(echo 1)
 else
