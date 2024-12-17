@@ -94,54 +94,14 @@ def part_1(lines):
 def part_2(lines):
 	s = 0
 	reg, program = read(lines)
-	print(program)
-	'''
-	for j in range(10000):
-#	while True:
-#		i = eval(input())	# TODO: security
-#	for j in range(-8**9, 8**9):
-#		if j % 100000 == 0:
-#			print(j)
-	#for j in range(-1000, 1000):
-	#for j in range(1):
-		i = (
-			8 ** 15 * 3 +
-			8 ** 14 * 0 +
-			8 ** 13 * 3 +
-			8 ** 12 * 3 +
-			8 ** 11 * 0 +
-			8 ** 10 * 0 +
-			8 ** 9 * 1 +
-			8 ** 8 * 6 +
-			8 ** 7 * 0 +
-			8 ** 6 * j +
-			8 ** 5 * 0 +
-			8 ** 4 * 0 +
-			8 ** 3 * 0 +
-			8 ** 2 * 0 +
-			8 ** 1 * 0 +
-			8 ** 0 * 0
-		)
-		i = j
-		r = reg.copy()
-		r['A'] = i
-		out = run1(r, program)
-		print(out, i, j)
-		if program == out:
-			return i
-#	else:
-#		raise 0/0
-	'''
-	# 107416870455448
-	print(len(program))
 	def recu(program, reg, level, base):
-		for i in range(-8, 8):
+		for i in range(8):
 			r = reg.copy()
 			r['A'] = base + 8 ** (level) * i
 			if r['A'] < 0:
 				continue
 			out = run1(r, program)
-			print(base, level, out, out == program)
+			#print(base, level, out, out == program)
 			if out == program:
 				return base + 8 ** (level) * i
 			if len(out) == len(program) and out[level:] == program[level:]:
@@ -150,6 +110,7 @@ def part_2(lines):
 					return ans
 		return None
 	s = recu(program, reg, len(program) - 1, 0)
+	assert s is not None
 	return s
 
 if __name__ == '__main__':
