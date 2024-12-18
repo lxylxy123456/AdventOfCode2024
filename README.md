@@ -23,12 +23,14 @@
 |[d15](d15)|[q.txt](d15/q.txt)|[ex.txt](d15/ex.txt), [0](d15/ex0.txt), [2](d15/ex2.txt), [3](d15/ex3.txt)|[in.txt](d15/in.txt)|[s.py](d15/s.py)|[`Mo8lxhzlCsI`](https://youtu.be/Mo8lxhzlCsI)||
 |[d16](d16)|[q.txt](d16/q.txt)|[ex.txt](d16/ex.txt), [2](d16/ex2.txt)|[in.txt](d16/in.txt)|[s.py](d16/s.py)|[`TbENqu_O1zc`](https://youtu.be/TbENqu_O1zc)||
 |[d17](d17)|[q.txt](d17/q.txt)|[ex.txt](d17/ex.txt), [2](d17/ex2.txt)|[in.txt](d17/in.txt)|[s.py](d17/s.py)|[`irtIc2NfqCM`](https://youtu.be/irtIc2NfqCM)||
+|[d18](d18)|[q.txt](d18/q.txt)|[ex.txt](d18/ex.txt)|[in.txt](d18/in.txt)|[s.py](d18/s.py)|[`AA_HTUAiGN4`](https://youtu.be/AA_HTUAiGN4)||
 
 ## My time
 
 ```
       --------Part 1---------   --------Part 2---------
 Day       Time    Rank  Score       Time    Rank  Score
+ 18   00:09:11     645      0   00:18:32    1067      0
  17   00:17:41     837      0   01:04:24     267      0
  16   00:11:20     583      0   00:33:04     803      0
  15   00:10:54     163      0   01:17:34    1691      0
