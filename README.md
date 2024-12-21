@@ -26,7 +26,7 @@
 |[d18](d18)|[q.txt](d18/q.txt)|[ex.txt](d18/ex.txt)|[in.txt](d18/in.txt)|[s.py](d18/s.py)|[`AA_HTUAiGN4`](https://youtu.be/AA_HTUAiGN4)||
 |[d19](d19)|[q.txt](d19/q.txt)|[ex.txt](d19/ex.txt)|[in.txt](d19/in.txt)|[s.py](d19/s.py)|[`IimV1qhxLVo`](https://youtu.be/IimV1qhxLVo)||
 |[d20](d20)|[q.txt](d20/q.txt)|[ex.txt](d20/ex.txt)|[in.txt](d20/in.txt)|[s.py](d20/s.py)|[`IwlniP60orM`](https://youtu.be/IwlniP60orM)||
-|[d21](d21)|[q.txt](d21/q.txt)|[ex.txt](d21/ex.txt)|[in.txt](d21/in.txt)|[s.py](d21/s.py), [_bad](d21/s_bad.py)|None|[debug.py](d21/debug.py)|
+|[d21](d21)|[q.txt](d21/q.txt)|[ex.txt](d21/ex.txt)|[in.txt](d21/in.txt)|[s.py](d21/s.py)|None|[bad.py](d21/bad.py), [debug.py](d21/debug.py)|
 
 ## My time
 
