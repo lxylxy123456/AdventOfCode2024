@@ -126,10 +126,35 @@ def part_1(lines):
 		s += len(seq) * int(i.strip('A'))
 	return s
 
+@functools.cache
+def solve2(begin, end, levels):
+	if not levels:
+		return 1
+	f = LEVELS_MAP[levels[0]]
+	cand = None
+	for i in f(begin, end):
+		cur = solve_moves2(i, levels[1:])
+		if cand is None or cur < cand:
+			cand = cur
+	#print(repr(begin), repr(end), repr(levels), repr(cand))
+	return cand
+
+@functools.cache
+def solve_moves2(text, levels):
+	assert text.endswith('A')
+	ans = 0
+	for b, e in zip(('A' + text)[:-1], text):
+		ans += solve2(b, e, levels)
+	#print(repr(text), repr(levels), repr(ans))
+	return ans
+
 def part_2(lines):
 	s = 0
+	levels = 'n' + 'd' * 25
 	for i in lines:
-		i
+		seq = solve_moves2(i, levels)
+		#print(seq, int(i.strip('A')))
+		s += seq * int(i.strip('A'))
 	return s
 
 if __name__ == '__main__':
