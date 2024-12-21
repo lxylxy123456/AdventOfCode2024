@@ -43,64 +43,129 @@ def _get_paths(begin, end, loc):
 	# TODO: maybe there is no need to interleave
 	ret = []
 	for i in set(itertools.permutations(ans)):
-		ret.append(''.join(i))
+		ret.append(''.join(i) + 'A')
 	return ret
+
+LOC_NUM = {
+	'7': (0, 0),
+	'8': (0, 1),
+	'9': (0, 2),
+	'4': (1, 0),
+	'5': (1, 1),
+	'6': (1, 2),
+	'1': (2, 0),
+	'2': (2, 1),
+	'3': (2, 2),
+	'0': (3, 1),
+	'A': (3, 2),
+}
+
+LOC_DIR = {
+	'^': (0, 1),
+	'A': (0, 2),
+	'<': (1, 0),
+	'v': (1, 1),
+	'>': (1, 2),
+}
 
 @functools.cache
 def get_paths_num(begin, end):
-	loc = {
-		'7': (0, 0),
-		'8': (0, 1),
-		'9': (0, 2),
-		'4': (1, 0),
-		'5': (1, 1),
-		'6': (1, 2),
-		'1': (2, 0),
-		'2': (2, 1),
-		'3': (2, 2),
-		'0': (3, 1),
-		'A': (3, 2),
-	}
-	return _get_paths(begin, end, loc)
+	return _get_paths(begin, end, LOC_NUM)
 
 @functools.cache
 def get_paths_dir(begin, end):
-	loc = {
-		'^': (0, 1),
-		'A': (0, 2),
-		'<': (1, 0),
-		'v': (1, 1),
-		'>': (1, 2),
-	}
-	return _get_paths(begin, end, loc)
+	return _get_paths(begin, end, LOC_DIR)
 
-def solve_level1(output, level):
-	prev = 'A'
-	assert output[-1] == 'A'
-	seq_choices = ['']
-	for i in output:
-		new_seq_choices = []
-		for j in itertools.product(seq_choices, level(prev, i)):
-			new_seq_choices.append(''.join(j) + 'A')
-		seq_choices = new_seq_choices
-		prev = i
-	return seq_choices
+LEVELS_MAP = {
+	'n': get_paths_num,
+	'd': get_paths_dir,
+}
 
-def solve_sequence1(output, levels):
-	seqs = [output]
+def solve1(begin, end, levels):
+	if not levels:
+		return end
+	f = LEVELS_MAP[levels[0]]
+	cand = None
+	for i in f(begin, end):
+		cur = solve_moves1(i, levels[1:])
+		if cand is None or len(cur) < len(cand):
+			cand = cur
+	#print(repr(begin), repr(end), repr(levels), repr(cand))
+	return cand
+
+def solve_moves1(text, levels):
+	assert text.endswith('A')
+	ans = ''
+	for b, e in zip(('A' + text)[:-1], text):
+		ans += solve1(b, e, levels)
+	#print(repr(text), repr(levels), repr(ans))
+	return ans
+
+def simulate1(text, level):
+	loc = {'n': LOC_NUM, 'd': LOC_DIR}[level]
+	rev_loc = dict(map(lambda x: (x[1], x[0]), loc.items()))
+	cx, cy = loc['A']
+	ans = ''
+	for i in text:
+		if i == 'A':
+			ans += rev_loc[(cx, cy)]
+		elif i == '<':
+			cy -= 1
+		elif i == 'v':
+			cx += 1
+		elif i == '>':
+			cy += 1
+		elif i == '^':
+			cx -= 1
+		else:
+			raise ValueError
+		#print(i, cx, cy)
+	assert rev_loc[(cx, cy)] == 'A'
+	return ans
+
+def simulate_levels1(text, levels):
+	cur = text
 	for level in levels:
-		new_seqs = []
-		for i in seqs:
-			new_seqs.extend(solve_level1(i, level))
-		seqs = new_seqs
-	return min(seqs, key=len)
+		cur = simulate1(cur, level)
+	return cur
+
+#print(simulate1('<vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A', 'd'))
+#print(simulate1('v<<A>>^A<A>AvA<^AA>A<vAAA>^A', 'd'))
+#print(simulate1('<A^A>^^AvvvA', 'n'))
+
+_0 = '<vA<AA>^>AAvA<^A>AvA^Av<<A>^>AAvA^A<vA>^AA<A>Av<<A>A>^AAAvA<^A>A'
+_1 = 'v<<AA>^A>A<AA>AvAA^A<vAAA>^A'
+_2 = '<<^A^^A>>AvvvA'
+_3 = '179A'
+assert len(_0) == 64
+assert simulate1(_0, 'd') == _1
+assert simulate1(_1, 'd') == _2
+assert simulate1(_2, 'n') == _3
+
+r0 = '<v<A>>^A<vA<A>>^AAvAA<^A>A<v<A>>^AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A'
+r1 = '<Av<AA>>^A<AA>AvAA^A<vAAA>^A'
+r2 = '^<<A^^A>>AvvvA'
+r3 = '179A'
+assert len(r0) == 68
+assert simulate1(r0, 'd') == r1
+assert simulate1(r1, 'd') == r2
+assert simulate1(r2, 'n') == r3
+
+for i in [
+	'<vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A',
+	'<v<A>>^AAAvA^A<vA<AA>>^AvAA<^A>A<v<A>A>^AAAvA<^A>A<vA>^A<A>A',
+	'<v<A>>^A<vA<A>>^AAvAA<^A>A<v<A>>^AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A',
+	'<v<A>>^AA<vA<A>>^AAvAA<^A>A<vA>^A<A>A<vA>^A<A>A<v<A>A>^AAvA<^A>A',
+	'<v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A',
+]:
+	print(simulate_levels1(i, 'ddn'))
 
 def part_1(lines):
 	s = 0
-	levels = [get_paths_num, get_paths_dir, get_paths_dir]
+	levels = 'ndd'
 	for i in lines:
-		seq = solve_sequence1(i, levels)
-		print(int(i.strip('A')), len(seq))
+		seq = solve_moves1(i, levels)
+		print(len(seq), int(i.strip('A')))
 		s += len(seq) * int(i.strip('A'))
 	return s
 
