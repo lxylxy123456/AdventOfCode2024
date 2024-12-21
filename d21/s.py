@@ -40,10 +40,26 @@ def _get_paths(begin, end, loc):
 		ans += (ey - by) * '>'
 	else:
 		ans += (by - ey) * '<'
-	# TODO: maybe there is no need to interleave
+	# Previous version did not handle the problem of moving to empty space
 	ret = []
 	for i in set(itertools.permutations(ans)):
-		ret.append(''.join(i) + 'A')
+		valid = True
+		cx, cy = bx, by
+		for j in i:
+			if j == '<':
+				cy -= 1
+			elif j == 'v':
+				cx += 1
+			elif j == '>':
+				cy += 1
+			elif j == '^':
+				cx -= 1
+			else:
+				raise ValueError
+			if (cx, cy) not in loc.values():
+				valid = False
+		if valid:
+			ret.append(''.join(i) + 'A')
 	return ret
 
 LOC_NUM = {
