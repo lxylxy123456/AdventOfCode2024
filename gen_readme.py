@@ -34,7 +34,7 @@ def get_youtube_link(d):
 	line = open(os.path.join(d, 's.py')).read().split('\n')[0]
 	matched = re.fullmatch(r'# Youtube: https://youtu\.be/(.{11})', line)
 	if not matched:
-		return None
+		return ''
 	link, = matched.groups()
 	readme_content = ''.join([
 		'Youtube Video:\n',
