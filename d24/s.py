@@ -95,11 +95,24 @@ def part_1(lines):
 			s += str(int(v))
 	return int(s, 2)
 
+def graphviz(rules, f):
+	print('digraph G {', file=f)
+	for lhs, op, rhs, res in rules:
+		print('\t{%s; %s} -> %s;' % (lhs, rhs, res), file=f)
+		print('\t%s [label="%s\\n%s"];' % (res, op, res), file=f)
+	print('}', file=f)
+
 def part_2(lines):
 	s = 0
-	for i in lines:
-		i
-	return s
+	init_vals, rules = read_input(lines)
+	graphviz(rules, sys.stderr)
+	ans = [
+		'z11', 'wpd',	# 11
+		'skh', 'jqf',	# 15
+		'mdd', 'z19',	# 19
+		'z37', 'wts',	# 37
+	]
+	return ','.join(sorted(ans))
 
 if __name__ == '__main__':
 	main()
